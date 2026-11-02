@@ -17,15 +17,13 @@ t.penup()
 t.goto(0, 0)
 t.pendown()
 
-# Blütenblätter zeichnen
-t.color("red", "red")
-t.begin_fill()
-for i in range(6):
-    for j in range(2):
-        t.circle(50, 60)
-        t.left(120)
-    t.left(60)
-t.end_fill()
+# Blüte
+t.color("red")
+for i in range(4):
+    t.begin_fill()
+    t.circle(20)
+    t.end_fill()
+    t.left(90)
 
 screen.exitonclick()
 turtle.done()
