@@ -6,7 +6,7 @@ import tempfile
 
 from PIL import Image, ImageChops
 
-def save_image(resolution=1, padding=10, filename="drawing.png"):
+def save_image(resolution=10, padding=10, filename="drawing.png"):
     if resolution <= 0:
         raise ValueError("resolution must be greater than 8")
 
