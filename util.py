@@ -11,59 +11,57 @@ def save_image(resolution=1, padding=10, filename="drawing.png"):
     screen = turtle.Screen()
     screen.update()
 
-    # Export the drawing
-    eps_file = "drawing.eps"
-    screen.getcanvas().postscript(file=eps_file)
-
-    # Find Ghostscript
     gs = shutil.which("gs") or shutil.which("gswin64c") or shutil.which("gswin32c")
     if not gs:
         raise RuntimeError("Ghostscript is required. Install it to export EPS to PNG.")
 
-    # Render at the requested resolution
-    temp_file = "_drawing_temp.png"
-    dpi = int(72 * resolution)
+    # Temporary directory is automatically removed when finished
+    with tempfile.TemporaryDirectory() as temp_dir:
+        eps_file = os.path.join(temp_dir, "drawing.eps")
+        temp_file = os.path.join(temp_dir, "drawing.png")
 
-    subprocess.run(
-        [
-            gs,
-            "-dSAFER",
-            "-dBATCH",
-            "-dNOPAUSE",
-            "-dEPSCrop",
-            "-sDEVICE=png16m",
-            f"-r{dpi}",
-            f"-sOutputFile={temp_file}",
-            eps_file,
-        ],
-        check=True,
-        stdout=subprocess.DEVNULL,
-    )
+        screen.getcanvas().postscript(file=eps_file)
 
-    # Open the rendered image
-    img = Image.open(temp_file).convert("RGB")
+        dpi = int(72 * resolution)
 
-    # Detect non-white pixels to remove blank space
-    white = Image.new("RGB", img.size, "white")
-    diff = ImageChops.difference(img, white).convert("L")
-    diff = diff.point(lambda p: 255 if p > 10 else 0)
-    bbox = diff.getbbox()
-
-    if bbox:
-        # Scale padding with resolution
-        pad = round(padding * resolution)
-        left, top, right, bottom = bbox
-
-        # Crop while keeping padding around the drawing
-        bbox = (
-            max(0, left - pad),
-            max(0, top - pad),
-            min(img.width, right + pad),
-            min(img.height, bottom + pad),
+        subprocess.run(
+            [
+                gs,
+                "-dSAFER",
+                "-dBATCH",
+                "-dNOPAUSE",
+                "-dEPSCrop",
+                "-sDEVICE=png16m",
+                f"-r{dpi}",
+                f"-sOutputFile={temp_file}",
+                eps_file,
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
         )
-        img = img.crop(bbox)
 
-    img.save(filename, "PNG")
+        img = Image.open(temp_file).convert("RGB")
+
+        # Detect non-white pixels to remove blank space
+        white = Image.new("RGB", img.size, "white")
+        diff = ImageChops.difference(img, white).convert("L")
+        diff = diff.point(lambda p: 255 if p > 10 else 0)
+        bbox = diff.getbbox()
+
+        if bbox:
+            pad = round(padding * resolution)
+            left, top, right, bottom = bbox
+
+            bbox = (
+                max(0, left - pad),
+                max(0, top - pad),
+                min(img.width, right + pad),
+                min(img.height, bottom + pad),
+            )
+
+            img = img.crop(bbox)
+
+        img.save(filename, "PNG")
 
 def draw_grid(
     interval=50,
