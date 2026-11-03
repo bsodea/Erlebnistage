@@ -9,5 +9,16 @@ $MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 $env:Path = "$MachinePath;$UserPath"
 
+# Check install
+git --version
+python --vesion
+code --version
+gswin64c --version
+
 # Install Code Extensions
-cat extensions.txt | xargs -L 1 code --install-extension
+Get-Content .\extensions.txt | ForEach-Object {
+    code --install-extension $_
+}
+
+# Install python packages
+pip install pillow
