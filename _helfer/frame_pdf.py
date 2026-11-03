@@ -189,6 +189,21 @@ def process_images():
             preserveAspectRatio=True
         )
 
+        # Add filename underneath the frame
+        pdf.setFillColorRGB(
+            CAPTION_COLOR[0] / 255,
+            CAPTION_COLOR[1] / 255,
+            CAPTION_COLOR[2] / 255
+        )
+
+        pdf.setFont("Helvetica", 12)
+
+        pdf.drawCentredString(
+            page_width / 2,
+            y - 25,
+            image_name
+        )
+
         # One image per page
         pdf.showPage()
 
