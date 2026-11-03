@@ -1,5 +1,4 @@
 import turtle
-from util import draw_grid, save_image
 
 t = turtle.Turtle()
 
@@ -86,5 +85,4 @@ t.circle(100, 180)
 
 t.end_fill()
 
-draw_grid(interval=10)
-save_image(20)
+turtle.done()
