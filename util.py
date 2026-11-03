@@ -1,6 +1,8 @@
 import shutil
 import subprocess
 import turtle
+import os
+import tempfile
 
 from PIL import Image, ImageChops
 
