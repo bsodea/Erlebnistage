@@ -24,6 +24,11 @@ GOLD_MID = (190, 145, 55)
 GOLD_LIGHT = (255, 230, 145)
 GOLD_BRIGHT = (255, 248, 210)
 
+# Caption settings
+CAPTION_FONT_SIZE = 42
+CAPTION_COLOR = (55, 45, 30)
+CAPTION_SPACE = 90
+
 # ------------------------------------------------
 
 
@@ -130,6 +135,9 @@ def process_images():
         print(f"Processing {filename}...")
 
         path = os.path.join(INPUT_FOLDER, filename)
+
+        # Get filename without extension
+        image_name = os.path.splitext(filename)[0]
 
         with Image.open(path) as original:
             original = original.convert("RGB")
