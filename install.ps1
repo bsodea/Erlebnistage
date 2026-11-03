@@ -16,9 +16,37 @@ Write-Host "[INSTALL] Python 3.14..."
 winget install --id Python.Python.3.14 -e
 Write-Host "[INSTALL] Python completed."
 
-Write-Host "[INSTALL] Ghostscript..."
-winget install --id ArtifexSoftware.GhostScript -e
-Write-Host "[INSTALL] Ghostscript completed."
+# Download Ghostscript installer
+Write-Host "[DEBUG] Downloading Ghostscript installer..."
+
+$InstallerUrl = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10080/gs10080w64.exe"
+$InstallerPath = Join-Path $env:TEMP "gs10080w64.exe"
+$ExpectedHash = "52a91b8bf09298788d7a57b9206127026c23eacd75405f0a131e26dc381dce50"
+
+Invoke-WebRequest -Uri $InstallerUrl -OutFile $InstallerPath
+
+# Verify installer checksum
+Write-Host "[DEBUG] Verifying installer checksum..."
+$ActualHash = (Get-FileHash -Path $InstallerPath -Algorithm SHA256).Hash.ToLower()
+
+if ($ActualHash -ne $ExpectedHash) {
+    Write-Host "[ERROR] Installer checksum mismatch!"
+    Remove-Item $InstallerPath -Force
+    exit 1
+}
+
+# Execute Ghostscript installer
+Write-Host "[DEBUG] Starting Ghostscript installer..."
+$Process = Start-Process -FilePath $InstallerPath -Wait -PassThru
+
+if ($Process.ExitCode -ne 0) {
+    Write-Host "[ERROR] Ghostscript installer failed with exit code $($Process.ExitCode)"
+    exit 1
+}
+
+# Cleanup installer
+Write-Host "[DEBUG] Removing installer file..."
+Remove-Item $InstallerPath -Force
 
 # --
 # PATH REFRESH
