@@ -82,7 +82,7 @@ Get-Content .\extensions.txt | ForEach-Object {
 }
 
 Write-Host "[INSTALL] Installing Python packages..."
-pip install pillow
+pip install pillow reportlab
 Write-Host "[DEBUG] Python package installation completed."
 
 # --
