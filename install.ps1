@@ -86,6 +86,20 @@ pip install pillow
 Write-Host "[DEBUG] Python package installation completed."
 
 # --
+# VS Code Config
+# --
+
+# Overwrite VS Code settings
+Write-Host "[DEBUG] Updating VS Code settings..."
+
+$SettingsPath = Join-Path $env:APPDATA "Code/User/settings.json"
+$SourceSettings = Join-Path (Get-Location) "vs-settings.json"
+
+Copy-Item -Path $SourceSettings -Destination $SettingsPath -Force
+
+Write-Host "[DEBUG] VS Code settings updated."
+
+# --
 # GIT CLONING
 # --
 
