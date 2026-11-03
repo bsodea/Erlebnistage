@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+  "chat.agent.enabled": false,
+  "inlineChat.askInChat": false,
+  "chat.disableAIFeatures": true,
+  "[python]":{
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
+}
